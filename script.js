@@ -23,9 +23,10 @@ cursor.y = 0
 
 let score = 0
 
-let win = true
+let win = 0
 
 let timer = 0
+
 
 /*
  * Resize+Back effect
@@ -62,20 +63,30 @@ const paintback = () =>
 }
 paintback()
 
+function startGame()
+{
+    const text = 'Start?'
+    context.font = windowWidth/30 +'px Helvetica'
+    context.textAlign = 'center'
+    context.textBaseline = 'middle'
+    context.fillText(text, (windowWidth/2), 300,windowWidth/4)
+    context.lineWidth = 2
+}
+
 
 //ball gestion
 
-function creationball()
+function creationBall()
 {
     for (let i = 0; i < 1 ; i++ )
     {
-        modificationball(i)
-        paintball(i)
+        modificationBall(i)
+        paintBall(i)
     }
 }
-creationball()
+creationBall()
 
-function modificationball(i)
+function modificationBall(i)
 {
     const ball = new Ball()
     ball.r = (windowWidth/40)*2
@@ -88,7 +99,7 @@ function modificationball(i)
 }
 
 
-function paintball(i)
+function paintBall(i)
 {
     context.beginPath()
     context.arc(balls[i].x, balls[i].y, balls[i].r, 0, Math.PI * 2, true)
@@ -140,6 +151,8 @@ function scoreprint()
 }
 scoreprint()
 
+//end print
+
 function endprint()
 {
     const text = 'LOSE'
@@ -148,16 +161,15 @@ function endprint()
     context.textBaseline = 'middle'
     context.fillText(text, (windowWidth/4), 300,windowWidth/4)
     context.lineWidth = 2
-    win = false
+    
 
     const text2 = 'Try again?'
     context.font = windowWidth/30 +'px Helvetica'
     context.textAlign = 'center'
     context.textBaseline = 'middle'
     context.fillText(text2, (windowWidth/4)*3, 300,(windowWidth/4)*3.5)
+    context.fillText()
     context.lineWidth = 2
-
-    //balls = []
 }
 
 
@@ -167,10 +179,24 @@ function endprint()
 
 $canvas.addEventListener('click', (_event) =>
 {
+    //
+
+    if (win == 0)
+    {
+        if ((_event.clientX>(windowWidth/2) - 150)&&(_event.clientX<(windowWidth/2)+150)){
+            if((_event.clientY>250)&&(_event.clientY<350))
+            {
+                balls = []
+                win = 1
+                score= 0
+            }
+        }
+    }
+    
 
     //game click
 
-    if (win)
+    if (win == 1)
     {
         let index = -1
         for (let i = 0; i < balls.length ; i++ )
@@ -186,7 +212,7 @@ $canvas.addEventListener('click', (_event) =>
                 score ++
             }
         }
-        if ((index != -1) && (win))
+        if ((index != -1) && (win == 1))
         {
             context.clearRect(0, 0, windowWidth, windowHeight)
             balls[index].click = balls[index].click -1
@@ -197,7 +223,7 @@ $canvas.addEventListener('click', (_event) =>
             paintback()
             for(let i = 0 ; i < balls.length ; i++)
             {
-                paintball(i)
+                paintBall(i)
             }
             scoreprint()
         }
@@ -206,13 +232,13 @@ $canvas.addEventListener('click', (_event) =>
 
     //retry click
 
-    if (!win)
+    if (win == 2)
     {
         if ((_event.clientX>(windowWidth/4)*3 - 150)&&(_event.clientX<(windowWidth/4)*3.5)){
             if((_event.clientY>250)&&(_event.clientY<350))
             {
                 balls = []
-                win = true
+                win = 1
                 score= 0
             }
         }
@@ -227,25 +253,30 @@ const loop = () =>
 {
     window.requestAnimationFrame(loop)
 
-    //timer + ball generation
-
-    timer ++
-
-    if (timer==60)
-    {
-        newball()
-        timer = 0
-    }
-
-
-
     //Balls movement
 
     context.clearRect(0, 0, windowWidth, windowHeight)
     paintback()
-    
-    if (win)
+
+    if (win == 0)
     {
+        startGame()
+    }
+
+    
+    if (win == 1)
+    {
+
+        //timer + ball generation
+
+        timer ++
+
+        if (timer==60)
+        {
+            newball()
+            timer = 0
+        }
+
         for(let i = 0 ; i < balls.length ; i++)
         {   
             if (balls[i].value == 1)
@@ -265,14 +296,15 @@ const loop = () =>
                 balls[i].y += 0.7
             }
             //balls[i].y += 1
-            paintball(i)
+            paintBall(i)
             if (balls[i].y + balls[i].r >= groundY)
             {
+                win = 2
                 endprint()
             }
         }
     }
-    else
+    if (win == 2)
     {
         endprint()
     }

@@ -27,6 +27,8 @@ let win = 0
 
 let timer = 0
 
+let level = 1
+let diffculties = 0
 
 /*
  * Resize+Back effect
@@ -47,9 +49,10 @@ const resize = () =>
 window.addEventListener('resize', resize)
 resize()
 
-const paintback = () =>
+const paintBack = () =>
 {
     const gradient = context.createLinearGradient(windowWidth /2, 0, windowWidth /2, windowHeight)
+
 
     gradient.addColorStop(0, 'black')
     gradient.addColorStop(0.5, 'grey')
@@ -61,18 +64,7 @@ const paintback = () =>
     context.fillStyle = 'red'
     context.fillRect(0, groundY, windowWidth, windowHeight/4 )
 }
-paintback()
-
-function startGame()
-{
-    const text = 'Start?'
-    context.font = windowWidth/30 +'px Helvetica'
-    context.textAlign = 'center'
-    context.textBaseline = 'middle'
-    context.fillText(text, (windowWidth/2), 300,windowWidth/4)
-    context.lineWidth = 2
-}
-
+paintBack()
 
 //ball gestion
 
@@ -123,7 +115,7 @@ function paintBall(i)
 
 }
 
-function newball()
+function newBall()
 {
     const ball = new Ball()
 
@@ -137,10 +129,23 @@ function newball()
     balls.push(ball)
 }
 
+//start print
+
+function startGame()
+{
+    const text = 'Start?'
+    context.font = windowWidth/30 +'px Helvetica'
+    context.textAlign = 'center'
+    context.textBaseline = 'middle'
+    context.fillText(text, (windowWidth/2), 300,windowWidth/4)
+    context.lineWidth = 2
+}
+
 //score print
 
 function scoreprint()
 {
+    context.save()
     const text = 'Score : ' + score
     context.font = '40px Helvetica'
     context.textAlign = 'center'
@@ -148,6 +153,7 @@ function scoreprint()
     context.fillStyle = 'green'
     context.fillText(text, 100, 50, 300)
     context.lineWidth = 2
+    context.restore()
 }
 scoreprint()
 
@@ -168,10 +174,34 @@ function endprint()
     context.textAlign = 'center'
     context.textBaseline = 'middle'
     context.fillText(text2, (windowWidth/4)*3, 300,(windowWidth/4)*3.5)
-    context.fillText()
     context.lineWidth = 2
 }
 
+//difficulties print
+
+function levelprint()
+{
+    const textEas = 'Easy'
+    context.font = windowWidth/30 +'px Helvetica'
+    context.textAlign = 'center'
+    context.textBaseline = 'middle'
+    context.fillText(textEas, (windowWidth/6), 500,windowWidth/4)
+    context.lineWidth = 2
+
+    const textArg = 'Arg'
+    context.font = windowWidth/30 +'px Helvetica'
+    context.textAlign = 'center'
+    context.textBaseline = 'middle'
+    context.fillText(textArg, (windowWidth/6)*3, 500,windowWidth/4)
+    context.lineWidth = 2
+
+    const textHar = 'Hardcore'
+    context.font = windowWidth/30 +'px Helvetica'
+    context.textAlign = 'center'
+    context.textBaseline = 'middle'
+    context.fillText(textHar, (windowWidth/6)*5, 500,windowWidth/4)
+    context.lineWidth = 2
+}
 
 
 
@@ -220,12 +250,11 @@ $canvas.addEventListener('click', (_event) =>
             {
                 balls.splice(index, 1)
             }
-            paintback()
+            paintBack()
             for(let i = 0 ; i < balls.length ; i++)
             {
                 paintBall(i)
             }
-            scoreprint()
         }
     }
     
@@ -249,6 +278,7 @@ $canvas.addEventListener('click', (_event) =>
 
 //loop
 
+
 const loop = () =>
 {
     window.requestAnimationFrame(loop)
@@ -256,13 +286,18 @@ const loop = () =>
     //Balls movement
 
     context.clearRect(0, 0, windowWidth, windowHeight)
-    paintback()
+    paintBack()
 
     if (win == 0)
     {
         startGame()
+        levelprint()
     }
-
+    else
+    {
+        scoreprint()
+    }
+    
     
     if (win == 1)
     {
@@ -273,29 +308,29 @@ const loop = () =>
 
         if (timer==60)
         {
-            newball()
+            newBall()
             timer = 0
         }
 
         for(let i = 0 ; i < balls.length ; i++)
         {   
+            diffculties = 0.1 * level
             if (balls[i].value == 1)
             {
-                balls[i].y += 1.3
+                balls[i].y += 1.2 + diffculties
             }
             if (balls[i].value == 2)
             {
-                balls[i].y += 1.1
+                balls[i].y += 1 + diffculties
             }
             if (balls[i].value ==3)
             {
-                balls[i].y += 0.9
+                balls[i].y += 0.8 + diffculties
             }
             if (balls[i].value == 4)
             {
-                balls[i].y += 0.7
+                balls[i].y += 0.6 + diffculties
             }
-            //balls[i].y += 1
             paintBall(i)
             if (balls[i].y + balls[i].r >= groundY)
             {
@@ -304,11 +339,11 @@ const loop = () =>
             }
         }
     }
+
     if (win == 2)
     {
         endprint()
-    }
-    scoreprint()
+    } 
 }
 
 loop()

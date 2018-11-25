@@ -143,7 +143,7 @@ function startGame()
 
 //score print
 
-function scoreprint()
+function scorePrint()
 {
     context.save()
     const text = 'Score : ' + score
@@ -155,11 +155,11 @@ function scoreprint()
     context.lineWidth = 2
     context.restore()
 }
-scoreprint()
+scorePrint()
 
 //end print
 
-function endprint()
+function endPrint()
 {
     const text = 'LOSE'
     context.font = windowWidth/30 +'px Helvetica'
@@ -179,7 +179,7 @@ function endprint()
 
 //difficulties print
 
-function levelprint()
+function levelPrint()
 {
     const textEas = 'Easy'
     context.font = windowWidth/30 +'px Helvetica'
@@ -188,28 +188,80 @@ function levelprint()
     context.fillText(textEas, (windowWidth/6), 500,windowWidth/4)
     context.lineWidth = 2
 
+    const textHar = 'Hard'
+    context.font = windowWidth/30 +'px Helvetica'
+    context.textAlign = 'center'
+    context.textBaseline = 'middle'
+    context.fillText(textHar, (windowWidth/6)*3, 500,windowWidth/4)
+    context.lineWidth = 2
+
     const textArg = 'Arg'
     context.font = windowWidth/30 +'px Helvetica'
     context.textAlign = 'center'
     context.textBaseline = 'middle'
-    context.fillText(textArg, (windowWidth/6)*3, 500,windowWidth/4)
-    context.lineWidth = 2
-
-    const textHar = 'Hardcore'
-    context.font = windowWidth/30 +'px Helvetica'
-    context.textAlign = 'center'
-    context.textBaseline = 'middle'
-    context.fillText(textHar, (windowWidth/6)*5, 500,windowWidth/4)
+    context.fillText(textArg, (windowWidth/6)*5, 500,windowWidth/4)
     context.lineWidth = 2
 }
 
+function levelChoice(_event)
+{
+    if ((_event.clientX>(windowWidth/6) - 150)&&(_event.clientX<(windowWidth/6)+150))
+    {
+        if((_event.clientY>450)&&(_event.clientY<550))
+        {
+            level = 1
+        }
+    }
+
+    if ((_event.clientX>((windowWidth/6)*3) - 150)&&(_event.clientX<((windowWidth/6)*3)+150))
+    {
+        if((_event.clientY>450)&&(_event.clientY<550))
+        {
+            level = 4
+        }
+    }
+
+    if ((_event.clientX>((windowWidth/6)*5) - 150)&&(_event.clientX<((windowWidth/6)*5)+150))
+    {
+        if((_event.clientY>450)&&(_event.clientY<550))
+        {
+            level = 7
+        }
+    }
+}
+
+
+function barLevelPrint()
+{
+    
+    if (level == 1)
+    {
+        context.beginPath
+        context.moveTo((windowWidth/6)-150,550);
+        context.lineTo((windowWidth/6)+150,550)
+        context.stroke();
+    }
+    if (level == 4)
+    {
+        context.beginPath
+        context.moveTo(((windowWidth/6)*3)-150,550);
+        context.lineTo(((windowWidth/6)*3)+150,550)
+        context.stroke();
+    }
+    if (level == 7)
+    {
+        context.beginPath
+        context.moveTo(((windowWidth/6)*5)-150,550);
+        context.lineTo(((windowWidth/6)*5)+150,550)
+        context.stroke();
+    }
+}
 
 
 //click gestion
 
 $canvas.addEventListener('click', (_event) =>
 {
-    //
 
     if (win == 0)
     {
@@ -221,6 +273,8 @@ $canvas.addEventListener('click', (_event) =>
                 score= 0
             }
         }
+        levelChoice(_event)
+        
     }
     
 
@@ -271,6 +325,7 @@ $canvas.addEventListener('click', (_event) =>
                 score= 0
             }
         }
+        levelChoice(_event)
     }
 
     
@@ -291,12 +346,10 @@ const loop = () =>
     if (win == 0)
     {
         startGame()
-        levelprint()
+        levelPrint()
+        barLevelPrint()
     }
-    else
-    {
-        scoreprint()
-    }
+
     
     
     if (win == 1)
@@ -314,7 +367,8 @@ const loop = () =>
 
         for(let i = 0 ; i < balls.length ; i++)
         {   
-            diffculties = 0.1 * level
+            diffculties = 0.2 * level
+            console.log(level)
             if (balls[i].value == 1)
             {
                 balls[i].y += 1.2 + diffculties
@@ -335,14 +389,17 @@ const loop = () =>
             if (balls[i].y + balls[i].r >= groundY)
             {
                 win = 2
-                endprint()
+                endPrint()
             }
         }
+        scorePrint()
     }
 
     if (win == 2)
     {
-        endprint()
+        endPrint()
+        levelPrint()
+        barLevelPrint()
     } 
 }
 

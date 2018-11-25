@@ -1,6 +1,6 @@
-# Cube Invaders
+# A Hard Spam Game
 
-A Space-Invader like Canvas based game
+
 
 ## Features
 

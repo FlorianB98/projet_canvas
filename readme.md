@@ -1,6 +1,6 @@
 # A Hard Spam Game
 
-
+A game where you have to destroy balls who fall by spaming them!
 
 ## Features
 

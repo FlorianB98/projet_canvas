@@ -236,21 +236,21 @@ function barLevelPrint()
     
     if (level == 1)
     {
-        context.beginPath
+        context.beginPath()
         context.moveTo((windowWidth/6)-150,550);
         context.lineTo((windowWidth/6)+150,550)
         context.stroke();
     }
     if (level == 4)
     {
-        context.beginPath
+        context.beginPath()
         context.moveTo(((windowWidth/6)*3)-150,550);
         context.lineTo(((windowWidth/6)*3)+150,550)
         context.stroke();
     }
     if (level == 7)
     {
-        context.beginPath
+        context.beginPath()
         context.moveTo(((windowWidth/6)*5)-150,550);
         context.lineTo(((windowWidth/6)*5)+150,550)
         context.stroke();
